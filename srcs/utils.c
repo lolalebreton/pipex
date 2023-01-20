@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/20 17:52:38 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:59:43 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ char	*cmd_path(char *cmd, char **paths_var)
 			return (NULL);
 		if (access(res, F_OK | X_OK) == 0)
 			return (res);
-		// printf("%s\n", env_paths[i]);
 		++i;
 	}
 	return (res);

@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:34:33 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/20 17:54:53 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:59:20 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	execute_cmd(t_cmd cmd, int filein, int fileout, char **env)
 {
 	int	res;
 
-	// printf("%s\n", cmd.path);
 	if (dup2(filein, STDIN_FILENO) == -1 || dup2(fileout, STDOUT_FILENO) == -1)
 		ft_exit("Dup2 error");
 	res = execve(cmd.path, cmd.argv, env);
@@ -77,30 +76,21 @@ int	main(int ac, char **av, char **envp)
 	char	*path;
 
 	if (ac != 5)
-		write(2, "Error: wrong number of arguments were given.\n", 20);
-	else
-	{
-		arg.envp = envp;
-		arg.file1 = av[1];
-		path_var = get_pathvar(envp);
-		// printf("parsing cmd 1\n");
-		arg.cmd1 = parse_cmd(av[2]);
-		path = cmd_path(arg.cmd1.path, path_var);
-		// printf("%s\n", path);
-		if (!path)
-			ft_exit(MALLOC_ERROR);
-		arg.cmd1.path = path;
-		// printf("\nparsing cmd 2\n");
-		arg.cmd2 = parse_cmd(av[3]);
-		// printf("ok\n");
-		path = cmd_path(arg.cmd2.path, path_var);
-		if (!path)
-			ft_exit(MALLOC_ERROR);
-		arg.cmd2.path = path;
-		// printf("%s\n", arg.cmd1.path);
-		// printf("%s\n", arg.cmd2.path);
-		arg.file2 = av[4];
-		pipex(arg, &status);
-	}
+		ft_exit("Error: wrong number of arguments were given.\n");
+	arg.envp = envp;
+	arg.file1 = av[1];
+	path_var = get_pathvar(envp);
+	arg.cmd1 = parse_cmd(av[2]);
+	path = cmd_path(arg.cmd1.path, path_var);
+	if (!path)
+		ft_exit(MALLOC_ERROR);
+	arg.cmd1.path = path;
+	arg.cmd2 = parse_cmd(av[3]);
+	path = cmd_path(arg.cmd2.path, path_var);
+	if (!path)
+		ft_exit(MALLOC_ERROR);
+	arg.cmd2.path = path;
+	arg.file2 = av[4];
+	pipex(arg, &status);
 	return (0);
 }
