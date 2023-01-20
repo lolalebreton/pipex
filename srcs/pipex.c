@@ -6,66 +6,101 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:34:33 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/18 18:35:30 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:54:53 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <signal.h>
 
-int	fork_cmd(char *file)
+int	*create_pipe(void)
+{
+	int	*pipefd;
+
+	pipefd = malloc(sizeof(int) * 2);
+	if (pipe(pipefd) == -1)
+	{
+		perror(NULL);
+		ft_exit(PIPE_ERROR);
+	}
+	return (pipefd);
+}
+
+void	execute_cmd(t_cmd cmd, int filein, int fileout, char **env)
+{
+	int	res;
+
+	// printf("%s\n", cmd.path);
+	if (dup2(filein, STDIN_FILENO) == -1 || dup2(fileout, STDOUT_FILENO) == -1)
+		ft_exit("Dup2 error");
+	res = execve(cmd.path, cmd.argv, env);
+	if (res == -1)
+	{
+		perror(NULL);
+		ft_exit("Execve error");
+	}
+}
+
+void	pipex(t_arg arg, int *status)
 {
 	pid_t	pid;
-	int	status;
+	int		*pipefd;
+	int		file1;
+	int		file2;
 
-	status = -1;
+	*status = 42;
+	pipefd = create_pipe();
 	pid = fork();
 	if (pid == -1)
 		perror(NULL);
 	else if (pid == 0)
-		execve(file, NULL, NULL);
-	else if (pid > 0)
-		wait(&status);
-	return (status);
+	{
+		close(pipefd[0]);
+		file1 = open(arg.file1, O_RDONLY);
+		if (file1 == -1)
+			ft_exit("File error");
+		execute_cmd(arg.cmd1, file1, pipefd[1], arg.envp);
+	}
+	waitpid(pid, status, 0);
+	close(pipefd[1]);
+	file2 = open(arg.file2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (file2 == -1)
+		ft_exit("File error");
+	execute_cmd(arg.cmd2, pipefd[0], file2, arg.envp);
 }
 
-int	execute_cmd(t_arg arg)
+int	main(int ac, char **av, char **envp)
 {
-	int	fd;
-	int	status;
+	t_arg	arg;
+	int		status;
+	char	**path_var;
+	char	*path;
 
-	fd = open("cmd.sh", O_WRONLY | O_CREAT, 0777);
-	if (fd == -1)
+	if (ac != 5)
+		write(2, "Error: wrong number of arguments were given.\n", 20);
+	else
 	{
-		perror(NULL);
-		unlink("cmd.sh");
-		return (0);
+		arg.envp = envp;
+		arg.file1 = av[1];
+		path_var = get_pathvar(envp);
+		// printf("parsing cmd 1\n");
+		arg.cmd1 = parse_cmd(av[2]);
+		path = cmd_path(arg.cmd1.path, path_var);
+		// printf("%s\n", path);
+		if (!path)
+			ft_exit(MALLOC_ERROR);
+		arg.cmd1.path = path;
+		// printf("\nparsing cmd 2\n");
+		arg.cmd2 = parse_cmd(av[3]);
+		// printf("ok\n");
+		path = cmd_path(arg.cmd2.path, path_var);
+		if (!path)
+			ft_exit(MALLOC_ERROR);
+		arg.cmd2.path = path;
+		// printf("%s\n", arg.cmd1.path);
+		// printf("%s\n", arg.cmd2.path);
+		arg.file2 = av[4];
+		pipex(arg, &status);
 	}
-	if (write(fd, "#!/bin/bash\n", 12) == -1
-		|| write(fd, "< ", 2) == -1
-		|| write(fd, arg.file1, ft_strlen(arg.file1)) == -1
-		|| write(fd, " ", 1) == -1
-		|| write(fd, arg.cmd1, ft_strlen(arg.cmd1)) == -1
-		|| write(fd, " | ", 3) == -1
-		|| write(fd, arg.cmd2, ft_strlen(arg.cmd2)) == -1
-		|| write(fd, " > ", 3) == -1 
-		|| write(fd, arg.file2, ft_strlen(arg.file2)) == -1)
-	{
-		perror(NULL);
-		unlink("cmd.sh");
-		return (0);
-	}
-	close(fd);
-	status = fork_cmd("cmd.sh");
-	if (status == -1 || unlink("cmd.sh") == -1)
-	{
-		perror(NULL);
-		return (0);
-	}
-	return (1);
-}
-
-
-void	pipex(t_arg arg)
-{
-	execute_cmd(arg);
+	return (0);
 }

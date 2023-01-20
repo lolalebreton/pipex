@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:30:50 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/12 15:43:03 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:48:09 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ char	*ft_strjoin(char *s1, char *s2, size_t len)
 		return (NULL);
 	ft_memcpy(buff, s1, i);
 	ft_memcpy(buff + i, s2, (len + 1));
-	free(s1);
 	return (buff);
 }
