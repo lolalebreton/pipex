@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:08:41 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/20 17:14:11 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/23 11:02:29 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,7 @@ char		*ft_calloc(size_t nmemb, size_t size);
 char		*ft_strjoin(char *s1, char *s2, size_t len);
 void		*ft_memcpy(void *dest, const void *src, size_t n);
 char		**ft_split(char const *s, char c);
+void		**ft_memfree(void **ar, int size);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif

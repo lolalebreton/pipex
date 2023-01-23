@@ -6,66 +6,48 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/20 17:59:43 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/23 14:01:00 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	**get_pathvar(char **env)
+t_arg	init_arg(char **av, char **envp)
 {
-	int		i;
-	char	**res;
+	t_arg	arg;
 
-	i = 0;
-	while (ft_strncmp(env[i], "PATH", 4) != 0)
-	{
-		++i;
-	}
-	res = ft_split(env[i], '=');
-	if (!res)
-		return (NULL);
-	res = ft_split(res[1], ':');
-	return (res);
+	arg.envp = envp;
+	arg.file1 = av[1];
+	arg.file2 = av[4];
+	arg.cmd1 = NULL;
+	arg.cmd2 = NULL;
+	return (arg);
 }
 
-char	*cmd_path(char *cmd, char **paths_var)
+void	free_arg(t_arg arg)
 {
-	char	*res;
-	int		i;
-
-	i = 0;
-	if (access(cmd, F_OK | X_OK) == 0)
-		return (cmd);
-	while (paths_var[i])
+	if (arg.cmd1)
 	{
-		res = ft_strjoin(paths_var[i], cmd, ft_strlen(cmd));
-		if (!res)
-			return (NULL);
-		if (access(res, F_OK | X_OK) == 0)
-			return (res);
-		++i;
+		if (arg.cmd1->path)
+			free(arg.cmd1->path);
+		if (arg.cmd1->option)
+			ft_memfree((void **) arg.cmd1->option, -1);
+		free(arg.cmd1);
 	}
-	return (res);
-}
-
-t_cmd	parse_cmd(char *cmd)
-{
-	t_cmd	res;
-	char	*slash;
-	char	**split;
-
-	slash = malloc(sizeof(char) * 2);
-	*slash = '/';
-	*(slash + 1) = 0;
-	split = ft_split(cmd, ' ');
-	res.path = ft_strjoin(slash, split[0], ft_strlen(split[0]));
-	res.argv = split;
-	return (res);
+	if (arg.cmd2)
+	{
+		if (arg.cmd2->path)
+			free(arg.cmd2->path);
+		if (arg.cmd2->option)
+			ft_memfree((void **) arg.cmd2->option, -1);
+		free(arg.cmd2);
+	}
 }
 
 void	ft_exit(char *error)
 {
-	perror(error);
+	write(2, error, ft_strlen(error));
+	write(2, "\n", 1);
+	//perror(error);
 	exit(EXIT_FAILURE);
 }

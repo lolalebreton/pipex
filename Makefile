@@ -7,8 +7,11 @@ SRCS_LIBFT	= ft_strcpy.c 			\
 			  ft_memcpy.c			\
 			  ft_strjoin.c			\
 			  ft_split.c			\
+			  ft_memfree.c			\
+			  ft_substr.c			\
 
 SRCS		= pipex.c				\
+			  command.c				\
 			  utils.c				\
 
 SRCS_BONUS	= main_bonus.c			\

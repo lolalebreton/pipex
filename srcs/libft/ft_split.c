@@ -6,68 +6,65 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 11:42:48 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/20 16:58:54 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/23 11:00:49 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_cntwrd(char const *s, char c)
+static int	ft_size(char const *s, char c)
 {
-	unsigned int	i;
-	int				cntr;
+	int	size;
 
-	i = 0;
-	cntr = 0;
-	while (s[i])
+	size = 0;
+	while (*s)
 	{
-		while (s[i] == c)
-			i++;
-		if (s[i] != '\0')
-			cntr++;
-		while (s[i] && (s[i] != c))
-			i++;
+		while (*s && *s == c)
+				++s;
+		if (*s && *s != c)
+		{
+			++size;
+			++s;
+		}
+		while (*s && *s != c)
+			++s;
 	}
-	return (cntr);
+	return (size + 1);
 }
 
-static char	*ft_strndup(const char *s, size_t n)
+static int	ft_advance(char const *s, char c)
 {
-	char	*str;
+	int	j;
 
-	str = (char *)malloc(sizeof(char) * n + 1);
-	if (str == NULL)
-		return (NULL);
-	str = ft_strncpy(str, s, n);
-	str[n] = '\0';
-	return (str);
+	j = 0;
+	while (*(s + j) && *(s + j) != c)
+		++j;
+	return (j);
 }
 
 char	**ft_split(char const *s, char c)
 {
+	char	**split;
+	int		size;
 	int		i;
 	int		j;
-	int		k;
-	char	**tab;
 
+	size = ft_size(s, c);
+	split = malloc(sizeof(char *) * size);
+	if (!split)
+		return (split);
 	i = 0;
-	k = 0;
-	tab = (char **)malloc(sizeof(char *) * (ft_cntwrd(s, c)) + 1);
-	if (tab == NULL)
-		return (NULL);
-	while (s[i])
+	while (i < size - 1)
 	{
-		while (s[i] == c)
-			i++;
-		j = i;
-		while (s[i] && s[i] != c)
-			i++;
-		if (i > j)
-		{
-			tab[k] = ft_strndup(s + j, i - j);
-			k++;
-		}
+		while (*s == c)
+			++s;
+		j = ft_advance(s, c);
+		*(split + i) = ft_substr(s, 0, j);
+		if (!*(split + i))
+			return ((char **) ft_memfree((void **) split, i));
+		s += j;
+		++i;
 	}
-	tab[k] = NULL;
-	return (tab);
+	*(split + i) = NULL;
+	return (split);
 }

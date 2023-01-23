@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_memfree.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/12 15:30:50 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/23 11:34:04 by lle-bret         ###   ########.fr       */
+/*   Created: 2022/09/25 20:06:10 by lle-bret          #+#    #+#             */
+/*   Updated: 2023/01/23 13:57:45 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char *s1, char *s2, size_t len)
+void	**ft_memfree(void **ar, int size)
 {
-	size_t	i;
-	char	*buff;
-
-	if (!s1)
-		s1 = ft_calloc(1, sizeof(char));
-	if (!s1 || !s2)
-		return (NULL);
-	i = ft_strlen(s1);
-	buff = malloc(sizeof(char) * (i + len + 1));
-	if (!buff)
-		return (NULL);
-	ft_memcpy(buff, s1, i);
-	ft_memcpy(buff + i, s2, (len + 1));
-	return (buff);
+	while (size > 0)
+	{
+		free(ar[size - 1]);
+		--size;
+	}
+	if (size == -1)
+	{
+		++size;
+		while (ar[size])
+		{
+			free(ar[size]);
+			++size;
+		}
+	}
+	free(ar);
+	return (NULL);
 }
