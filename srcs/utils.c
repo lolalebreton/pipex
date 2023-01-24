@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/23 14:01:00 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/24 16:08:37 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,17 @@
 t_arg	init_arg(char **av, char **envp)
 {
 	t_arg	arg;
+	char	**path_var;
 
 	arg.envp = envp;
 	arg.file1 = av[1];
 	arg.file2 = av[4];
-	arg.cmd1 = NULL;
-	arg.cmd2 = NULL;
+	path_var = get_pathvar(envp);
+	if (!path_var)
+		ft_exit(MALLOC_ERROR, &arg, NULL);
+	arg.cmd1 = parse_cmd(av[2], path_var);
+	arg.cmd2 = parse_cmd(av[3], path_var);
+	ft_memfree((void **) path_var, -1);
 	return (arg);
 }
 
@@ -44,10 +49,17 @@ void	free_arg(t_arg arg)
 	}
 }
 
-void	ft_exit(char *error)
+void	ft_exit(char *error, t_arg *arg, int *pipefd)
 {
-	write(2, error, ft_strlen(error));
-	write(2, "\n", 1);
-	//perror(error);
+	if (arg)
+		free_arg(*arg);
+	if (pipefd)
+		free(pipefd);
+	if (error)
+	{
+		write(2, error, ft_strlen(error));
+		write(2, "\n", 1);
+	}
+	perror(error);
 	exit(EXIT_FAILURE);
 }

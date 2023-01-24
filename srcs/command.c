@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/23 14:19:43 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/24 16:29:47 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,23 @@ char	*cmd_path(char *cmd, char **paths_var)
 	int		i;
 
 	i = 0;
-	if (access(cmd, F_OK | X_OK) == 0)
+	if (!cmd || access(cmd, F_OK | X_OK) == 0)
 		return (cmd);
 	while (paths_var[i])
 	{
 		res = ft_strjoin(paths_var[i], cmd, ft_strlen(cmd));
-		if (!res)
-			return (NULL);
-		if (access(res, F_OK | X_OK) == 0)
+		if (!res || access(res, F_OK | X_OK) == 0)
+		{
+			free(cmd);
 			return (res);
+		}
 		free(res);
 		++i;
 	}
+	write(2, COMMAND_ERROR, ft_strlen(COMMAND_ERROR));
+	write(2, cmd + 1, ft_strlen(cmd) - 1);
+	write(2, "\n", 1);
+	free(cmd);
 	return (NULL);
 }
 
@@ -69,9 +74,8 @@ t_cmd	*parse_cmd(char *cmd, char **paths_var)
 	if (!split)
 		return (NULL);
 	cmd = ft_strjoin(slash, split[0], ft_strlen(split[0]));
-	res->path = cmd_path(cmd, paths_var);
-	free(cmd);
 	free(slash);
+	res->path = cmd_path(cmd, paths_var);
 	if (!res->path)
 	{
 		ft_memfree((void **) split, -1);
