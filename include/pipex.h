@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:18:25 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/25 18:16:45 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/25 18:26:38 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ typedef struct s_arg {
 /*                                  pipex.c                                   */
 /* ************************************************************************** */
 
-int		*create_pipe(t_arg arg);
 void	fork_in(int *pipefd, t_arg arg, int *status);
 void	fork_out(int *pipefd, t_arg arg, int *status);
 void	pipex(t_arg arg, int *status, int *pipefd);
