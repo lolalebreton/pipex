@@ -1,1 +1,10 @@
-8
+Makefile
+file1
+file2
+include
+libft.a
+out
+pipex
+pipex-tester
+srcs
+test2

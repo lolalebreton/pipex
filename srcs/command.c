@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/24 16:29:47 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/25 17:56:34 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,6 @@ char	*cmd_path(char *cmd, char **paths_var)
 		free(res);
 		++i;
 	}
-	write(2, COMMAND_ERROR, ft_strlen(COMMAND_ERROR));
-	write(2, cmd + 1, ft_strlen(cmd) - 1);
-	write(2, "\n", 1);
 	free(cmd);
 	return (NULL);
 }
@@ -76,12 +73,6 @@ t_cmd	*parse_cmd(char *cmd, char **paths_var)
 	cmd = ft_strjoin(slash, split[0], ft_strlen(split[0]));
 	free(slash);
 	res->path = cmd_path(cmd, paths_var);
-	if (!res->path)
-	{
-		ft_memfree((void **) split, -1);
-		free(res);
-		return (NULL);
-	}
 	res->option = split;
 	return (res);
 }

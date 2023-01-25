@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:18:25 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/24 16:29:29 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/25 18:16:45 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
+# define ARG_ERROR "Error: Wrong number of arguments (expected 4)"
 # define PIPE_ERROR "Pipe error"
 # define MALLOC_ERROR "Malloc error"
 # define FILE_ERROR "File error"
 # define DUP_ERROR "Dup2 error"
-# define EXECVE_ERROR "Execve error"
-# define COMMAND_ERROR "zsh: command not found: "
+# define COMMAND_ERROR "Command not found"
+# define COMMAND_NOT_FOUND 127
 
 typedef struct s_cmd {
 	char	*path;
@@ -43,8 +44,8 @@ typedef struct s_arg {
 /* ************************************************************************** */
 
 int		*create_pipe(t_arg arg);
-void	fork_in(int *pipefd, t_arg arg);
-void	fork_out(int *pipefd, t_arg arg);
+void	fork_in(int *pipefd, t_arg arg, int *status);
+void	fork_out(int *pipefd, t_arg arg, int *status);
 void	pipex(t_arg arg, int *status, int *pipefd);
 
 /* ************************************************************************** */
@@ -61,6 +62,6 @@ t_cmd	*parse_cmd(char *cmd, char **paths_var);
 
 t_arg	init_arg(char **av, char **envp);
 void	free_arg(t_arg arg);
-void	ft_exit(char *error, t_arg *arg, int *pipefd);
+void	ft_exit(char *error, t_arg *arg, int status);
 
 #endif
