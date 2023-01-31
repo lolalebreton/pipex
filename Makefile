@@ -20,9 +20,9 @@ SRCS_BONUS	= pipex_bonus.c			\
 
 OBJS_LIBFT	= $(addprefix srcs/libft/, $(SRCS_LIBFT:.c=.o))
 
-OBJS		= $(addprefix srcs/, $(SRCS:.c=.o))
+OBJS		= $(addprefix srcs/mandatory/, $(SRCS:.c=.o))
 
-OBJS_BONUS	= $(addprefix srcs/, $(SRCS_BONUS:.c=.o))
+OBJS_BONUS	= $(addprefix srcs/bonus/, $(SRCS_BONUS:.c=.o))
 
 LIBFT		= libft.a
 

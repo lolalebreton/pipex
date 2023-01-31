@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:18:25 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/29 22:21:26 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/31 14:53:34 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <signal.h>
 
 # define ARG_ERROR "Error: Wrong number of arguments (expected 4)"
-# define BONUS_ARG_ERROR "Error: Wrong number of arguments (expected >= 4)"
 # define PIPE_ERROR "Pipe error"
 # define MALLOC_ERROR "Malloc error"
 # define FILE_ERROR "File error"

@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:34:33 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/29 22:34:51 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/31 15:28:27 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,24 @@ void	child(int i, t_arg arg, int *status)
 		arg.fd_out = open(arg.file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if  (arg.fd_in == -1 || arg.fd_out == -1)
 		ft_exit(NULL, &arg, *status);
-	printf("file in %d, file out %d\n", arg.fd_in, arg.fd_out);
+	// printf("file in %d, file out %d\n", arg.fd_in, arg.fd_out);
+	// printf("%s\n", arg.cmd[i]->path);
+	// int	j = 0;
+	// while (arg.cmd[i]->option[j])
+	// {
+	// 	printf("%s, ", arg.cmd[i]->option[j]);
+	// 	++j;
+	// }
+	// j = 0;
+	// while (arg.envp[j])
+	// {
+	// 	printf("%s, ", arg.envp[j]);
+	// 	++j;
+	// }
 	if (dup2(arg.fd_in, STDIN_FILENO) == -1
 		|| dup2(arg.fd_out, STDOUT_FILENO) == -1)
 		ft_exit(DUP_ERROR, &arg, *status);
 	close_fd(arg);
-	write(2, arg.cmd[i]->path, ft_strlen(arg.cmd[i]->path));
-	write(2, "\n", 1);
 	res = execve(arg.cmd[i]->path, arg.cmd[i]->option, arg.envp);
 	if (res == -1)
 		ft_exit(COMMAND_ERROR, &arg, COMMAND_NOT_FOUND);
@@ -61,12 +72,17 @@ void	pipex(t_arg arg, int *status)
 	{
 		printf("fork %d\n", i);
 		arg.pid[i] = fork();
-		printf("pid : %d\n", arg.pid[i]);
+		// printf("pid : %d\n", arg.pid[i]);
 		if (arg.pid[i] == -1)
 			perror(NULL);
 		else if (arg.pid[i] == 0)
 			child(i, arg, status);
-		printf("waiting for pid : %d\n", arg.pid[i]);
+		++i;
+	}
+	i = 0;
+	while (i < arg.nb_cmd)
+	{
+		// printf("waiting for pid : %d\n", arg.pid[i]);
 		waitpid(arg.pid[i], status, 0);
 		printf("fork %d done\n", i);
 		++i;

@@ -1,15 +1,1 @@
-total 184
-drwxr-xr-x  14 lolalebreton  staff    448 29 jan 22:22 .
-drwxr-xr-x  11 lolalebreton  staff    352 29 jan 22:08 ..
-drwxr-xr-x  13 lolalebreton  staff    416 25 jan 18:33 .git
--rw-r--r--   1 lolalebreton  staff    430 25 jan 17:40 .gitignore
-drwxr-xr-x   4 lolalebreton  staff    128 26 jan 16:49 .vscode
--rw-r--r--   1 lolalebreton  staff   1087 29 jan 22:21 Makefile
--rw-r--r--   1 lolalebreton  staff    875 29 jan 22:21 file
--rw-r--r--   1 lolalebreton  staff      5 25 jan 17:40 file1
--rwxr-xr-x   1 lolalebreton  staff     71 25 jan 18:18 file2
-drwxr-xr-x   5 lolalebreton  staff    160 26 jan 16:58 include
--rw-r--r--   1 lolalebreton  staff  29056 25 jan 17:40 libft.a
--rwxr-xr-x   1 lolalebreton  staff  38418 29 jan 22:22 pipex
-drwxr-xr-x  14 lolalebreton  staff    448 25 jan 17:59 pipex-tester
-drwxr-xr-x  16 lolalebreton  staff    512 29 jan 22:22 srcs
+1 1 5
