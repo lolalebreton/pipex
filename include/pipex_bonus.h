@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:18:25 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/29 22:21:26 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/29 22:21:24 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include "libft.h"
 # include <sys/types.h>
@@ -19,8 +19,7 @@
 # include <fcntl.h>
 # include <signal.h>
 
-# define ARG_ERROR "Error: Wrong number of arguments (expected 4)"
-# define BONUS_ARG_ERROR "Error: Wrong number of arguments (expected >= 4)"
+# define ARG_ERROR "Error: Wrong number of arguments (expected at least 4)"
 # define PIPE_ERROR "Pipe error"
 # define MALLOC_ERROR "Malloc error"
 # define FILE_ERROR "File error"
@@ -36,18 +35,21 @@ typedef struct s_cmd {
 typedef struct s_arg {
 	char	*file_in;
 	char	*file_out;
-	t_cmd	*cmd1;
-	t_cmd	*cmd2;
+	int		fd_in;
+	int		fd_out;
+	int		nb_cmd;
+	t_cmd	**cmd;
+	pid_t	*pid;
 	char	**envp;
+	int		*pipe;
 }	t_arg;
 
 /* ************************************************************************** */
 /*                                  pipex.c                                   */
 /* ************************************************************************** */
 
-void	fork_in(int *pipefd, t_arg arg, int *status);
-void	fork_out(int *pipefd, t_arg arg, int *status);
-void	pipex(t_arg arg, int *status, int *pipefd);
+void	child(int i, t_arg arg, int *status);
+void	pipex(t_arg arg, int *status);
 
 /* ************************************************************************** */
 /*                                 command.c                                  */
@@ -61,9 +63,8 @@ t_cmd	*parse_cmd(char *cmd, char **paths_var, t_arg *arg);
 /*                                   utils.c                                  */
 /* ************************************************************************** */
 
-t_arg	init_arg(char **av, char **envp);
 void	init_pipe(t_arg	*arg);
-void	ft_free(void *to_free);
+t_arg	init_arg(int ac, char **av, char **envp);
 void	free_arg(t_arg arg);
 void	ft_exit(char *error, t_arg *arg, int status);
 

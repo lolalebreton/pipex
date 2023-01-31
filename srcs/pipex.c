@@ -6,12 +6,11 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:34:33 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/25 18:24:41 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/26 16:59:20 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <signal.h>
 
 void	fork_in(int *pipefd, t_arg arg, int *status)
 {
@@ -19,7 +18,7 @@ void	fork_in(int *pipefd, t_arg arg, int *status)
 	int	res;
 
 	close(pipefd[0]);
-	fd = open(arg.file1, O_RDONLY);
+	fd = open(arg.file_in, O_RDONLY);
 	if (fd == -1)
 		ft_exit(NULL, &arg, *status);
 	if (dup2(fd, STDIN_FILENO) == -1 || dup2(pipefd[1], STDOUT_FILENO) == -1)
@@ -34,7 +33,7 @@ void	fork_out(int *pipefd, t_arg arg, int *status)
 	int	fd;
 	int	res;
 
-	fd = open(arg.file2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd = open(arg.file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 		ft_exit(NULL, &arg, *status);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1 || dup2(fd, STDOUT_FILENO) == -1)

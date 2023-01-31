@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command.c                                          :+:      :+:    :+:   */
+/*   command_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/25 17:56:34 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/29 22:19:13 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	**get_pathvar(char **env)
 {
@@ -32,7 +32,7 @@ char	**get_pathvar(char **env)
 	return (res);
 }
 
-char	*cmd_path(char *cmd, char **paths_var)
+char	*cmd_path(char *cmd, char **paths_var, t_arg *arg)
 {
 	char	*res;
 	int		i;
@@ -43,7 +43,12 @@ char	*cmd_path(char *cmd, char **paths_var)
 	while (paths_var[i])
 	{
 		res = ft_strjoin(paths_var[i], cmd, ft_strlen(cmd));
-		if (!res || access(res, F_OK | X_OK) == 0)
+		if (!res)
+		{
+			free(cmd);
+			ft_exit(MALLOC_ERROR, arg, EXIT_FAILURE);
+		}
+		if (access(res, F_OK | X_OK) == 0)
 		{
 			free(cmd);
 			return (res);
@@ -55,24 +60,28 @@ char	*cmd_path(char *cmd, char **paths_var)
 	return (NULL);
 }
 
-t_cmd	*parse_cmd(char *cmd, char **paths_var)
+t_cmd	*parse_cmd(char *cmd, char **paths_var, t_arg *arg)
 {
 	t_cmd	*res;
-	char	*slash;
 	char	**split;
 
 	res = malloc(sizeof(t_cmd));
 	if (!res)
-		return (NULL);
-	slash = malloc(sizeof(char) * 2);
-	*slash = '/';
-	*(slash + 1) = 0;
+		ft_exit(MALLOC_ERROR, arg, EXIT_FAILURE);
 	split = ft_split(cmd, ' ');
 	if (!split)
-		return (NULL);
-	cmd = ft_strjoin(slash, split[0], ft_strlen(split[0]));
-	free(slash);
-	res->path = cmd_path(cmd, paths_var);
+	{
+		free(res);
+		ft_exit(MALLOC_ERROR, arg, EXIT_FAILURE);
+	}
+	cmd = ft_strjoin("/", split[0], ft_strlen(split[0]));
+	if (!cmd)
+	{
+		free(split);
+		free(res);
+		ft_exit(MALLOC_ERROR, arg, EXIT_FAILURE);
+	}
+	res->path = cmd_path(cmd, paths_var, arg);
 	res->option = split;
 	return (res);
 }
