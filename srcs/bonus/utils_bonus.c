@@ -6,7 +6,7 @@
 /*   By: lle-bret <lle-bret@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 15:04:40 by lle-bret          #+#    #+#             */
-/*   Updated: 2023/01/31 15:16:50 by lle-bret         ###   ########.fr       */
+/*   Updated: 2023/01/31 16:11:54 by lle-bret         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,6 @@ t_arg	init_arg(int ac, char **av, char **envp)
 	if (!arg.pid)
 		ft_exit(MALLOC_ERROR, &arg, EXIT_FAILURE);
 	init_pipe(&arg);
-	// int j = 0;
-	// while (j < 2 * (arg.nb_cmd - 1))
-	// {
-	// 	printf("%d\n", arg.pipe[j]);
-	// 	++j;
-	// }
 	return (arg);
 }
 
